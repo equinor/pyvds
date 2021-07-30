@@ -21,6 +21,7 @@ jobs:
       - run:
           command: |
             pip install -e .
+            pip install pytest
       - run:
           name: Run tests
           command: python -m pytest
