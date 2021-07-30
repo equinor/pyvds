@@ -20,6 +20,7 @@ jobs:
             python -m pip install openvds -f http://bluware.jfrog.io/artifactory/Releases-OpenVDSPlus/2.1/python/ubuntu-20.04 --trusted-host bluware.jfrog.io
       - run:
           command: |
+            pip install segyio
             pip install -e .
             pip install pytest
       - run:
