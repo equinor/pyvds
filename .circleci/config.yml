@@ -1,0 +1,24 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@1.2
+
+workflows:
+  default:
+    jobs:
+      - build-and-test
+
+
+jobs:
+  build-and-test:
+    docker:
+      - image: cimg/python:3.9
+    steps:
+      - checkout
+      - run:
+          command: |
+            pip install openvds -f http://bluware.jfrog.io/artifactory/Releases-OpenVDSPlus/2.1/python/win --trusted-host bluware.jfrog.io
+            pip install -e .
+      - run:
+          name: Run tests
+          command: python -m pytest
