@@ -1,0 +1,29 @@
+version: 2.1
+
+orbs:
+  win: circleci/windows@2.2.0
+
+workflows:
+  default:
+    jobs:
+      - build-and-test
+
+
+jobs:
+  build-and-test:
+    executor:
+      name: win/default
+      shell: powershell.exe
+    steps:
+      - checkout
+      - run:
+          command: |
+            python -m pip install openvds -f http://bluware.jfrog.io/artifactory/Releases-OpenVDSPlus/2.1/python/win --trusted-host bluware.jfrog.io
+      - run:
+          command: |
+            pip install segyio
+            pip install -e .
+            pip install pytest
+      - run:
+          name: Run tests
+          command: python -m pytest
