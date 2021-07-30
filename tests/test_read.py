@@ -106,3 +106,17 @@ def compare_zslice_coord(vds_filename, tolerance):
 def test_read_zslice():
     compare_zslice(VDS_FILE, tolerance=1e-5)
     compare_zslice_coord(VDS_FILE, tolerance=1e-5)
+
+
+def compare_subvolume(vds_filename, tolerance):
+    min_il, max_il = 2,  3
+    min_xl, max_xl = 1,  2
+    min_z,  max_z = 10, 20
+    vol_vds = VdsReader(vds_filename).read_subvolume(min_il=min_il, max_il=max_il,
+                                                     min_xl=min_xl, max_xl=max_xl,
+                                                     min_z=min_z, max_z=max_z)
+    vol_segy = segyio.tools.cube(SGY_FILE)[min_il:max_il, min_xl:max_xl, min_z:max_z]
+    assert np.allclose(vol_vds, vol_segy, rtol=tolerance)
+
+def test_read_subvolume():
+    compare_subvolume(VDS_FILE, tolerance=1e-5)

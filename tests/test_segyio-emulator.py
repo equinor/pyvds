@@ -11,10 +11,10 @@ def compare_inline_ordinal(vds_filename, sgy_filename, lines_to_test, tolerance)
         with segyio.open(sgy_filename) as segyfile:
             for line_ordinal in lines_to_test:
                 slice_segy = segyfile.iline[segyfile.ilines[line_ordinal]]
-                slice_sgz = vdsfile.iline[vdsfile.ilines[line_ordinal]]
+                slice_vds = vdsfile.iline[vdsfile.ilines[line_ordinal]]
                 print(slice_segy)
-                print(slice_sgz)
-                assert np.allclose(slice_sgz, slice_segy, rtol=tolerance)
+                print(slice_vds)
+                assert np.allclose(slice_vds, slice_segy, rtol=tolerance)
 
 
 def compare_inline_number(vds_filename, sgy_filename, lines_to_test, tolerance):
@@ -22,8 +22,8 @@ def compare_inline_number(vds_filename, sgy_filename, lines_to_test, tolerance):
         with segyio.open(sgy_filename) as segyfile:
             for line_number in lines_to_test:
                 slice_segy = segyfile.iline[line_number]
-                slice_sgz = vdsfile.iline[line_number]
-                assert np.allclose(slice_sgz, slice_segy, rtol=tolerance)
+                slice_vds = vdsfile.iline[line_number]
+                assert np.allclose(slice_vds, slice_segy, rtol=tolerance)
 
 
 def test_inline_accessor():
@@ -35,8 +35,8 @@ def compare_crossline_ordinal(vds_filename, sgy_filename, lines_to_test, toleran
         with segyio.open(sgy_filename) as segyfile:
             for line_ordinal in lines_to_test:
                 slice_segy = segyfile.xline[segyfile.xlines[line_ordinal]]
-                slice_sgz = vdsfile.xline[vdsfile.xlines[line_ordinal]]
-                assert np.allclose(slice_sgz, slice_segy, rtol=tolerance)
+                slice_vds = vdsfile.xline[vdsfile.xlines[line_ordinal]]
+                assert np.allclose(slice_vds, slice_segy, rtol=tolerance)
 
 
 def compare_crossline_number(vds_filename, sgy_filename, lines_to_test, tolerance):
@@ -44,8 +44,8 @@ def compare_crossline_number(vds_filename, sgy_filename, lines_to_test, toleranc
         with segyio.open(sgy_filename) as segyfile:
             for line_number in lines_to_test:
                 slice_segy = segyfile.xline[line_number]
-                slice_sgz = vdsfile.xline[line_number]
-                assert np.allclose(slice_sgz, slice_segy, rtol=tolerance)
+                slice_vds = vdsfile.xline[line_number]
+                assert np.allclose(slice_vds, slice_segy, rtol=tolerance)
 
 
 def test_crossline_accessor():
@@ -57,10 +57,19 @@ def compare_zslice(vds_filename, tolerance):
     with pyvds.open(vds_filename) as vdsfile:
         with segyio.open(SGY_FILE) as segyfile:
             for line_number in range(50):
-                slice_sgz = vdsfile.depth_slice[line_number]
+                slice_vds = vdsfile.depth_slice[line_number]
                 slice_segy = segyfile.depth_slice[line_number]
-                assert np.allclose(slice_sgz, slice_segy, rtol=tolerance)
+                assert np.allclose(slice_vds, slice_segy, rtol=tolerance)
 
 
 def test_zslice_accessor():
     compare_zslice(VDS_FILE, tolerance=1e-5)
+
+
+def test_trace_accessor():
+    with pyvds.open(VDS_FILE) as vdsfile:
+        with segyio.open(SGY_FILE) as segyfile:
+            for trace_number in range(25):
+                vds_trace = vdsfile.trace[trace_number]
+                segy_trace = segyfile.trace[trace_number]
+                assert np.allclose(vds_trace, segy_trace, rtol=1e-5)
