@@ -12,10 +12,7 @@ def compare_inline_ordinal(vds_filename, sgy_filename, lines_to_test, tolerance)
             for line_ordinal in lines_to_test:
                 slice_segy = segyfile.iline[segyfile.ilines[line_ordinal]]
                 slice_vds = vdsfile.iline[vdsfile.ilines[line_ordinal]]
-                print(slice_segy)
-                print(slice_vds)
                 assert np.allclose(slice_vds, slice_segy, rtol=tolerance)
-
 
 def compare_inline_number(vds_filename, sgy_filename, lines_to_test, tolerance):
     with pyvds.open(vds_filename) as vdsfile:
@@ -25,10 +22,22 @@ def compare_inline_number(vds_filename, sgy_filename, lines_to_test, tolerance):
                 slice_vds = vdsfile.iline[line_number]
                 assert np.allclose(slice_vds, slice_segy, rtol=tolerance)
 
+def compare_inline_slicing(vds_filename):
+    slices = [slice(1, 5, 2), slice(1, 2, None), slice(1, 3, None), slice(None, 3, None), slice(3, None, None)]
+    with pyvds.open(vds_filename) as vdsfile:
+        for slice_ in slices:
+            slices_slice = np.asarray(vdsfile.iline[slice_])
+            start = slice_.start if slice_.start is not None else 1
+            stop = slice_.stop if slice_.stop is not None else 6
+            step = slice_.step if slice_.step is not None else 1
+            slices_concat = np.asarray([vdsfile.iline[i] for i in range(start, stop, step)])
+            assert np.array_equal(slices_slice, slices_concat)
 
 def test_inline_accessor():
     compare_inline_ordinal(VDS_FILE, SGY_FILE, [0, 1, 2, 3, 4], tolerance=1e-5)
     compare_inline_number(VDS_FILE, SGY_FILE, [1, 2, 3, 4, 5], tolerance=1e-5)
+    compare_inline_slicing(VDS_FILE)
+
 
 def compare_crossline_ordinal(vds_filename, sgy_filename, lines_to_test, tolerance):
     with pyvds.open(vds_filename) as vdsfile:
@@ -38,7 +47,6 @@ def compare_crossline_ordinal(vds_filename, sgy_filename, lines_to_test, toleran
                 slice_vds = vdsfile.xline[vdsfile.xlines[line_ordinal]]
                 assert np.allclose(slice_vds, slice_segy, rtol=tolerance)
 
-
 def compare_crossline_number(vds_filename, sgy_filename, lines_to_test, tolerance):
     with pyvds.open(vds_filename) as vdsfile:
         with segyio.open(sgy_filename) as segyfile:
@@ -47,10 +55,21 @@ def compare_crossline_number(vds_filename, sgy_filename, lines_to_test, toleranc
                 slice_vds = vdsfile.xline[line_number]
                 assert np.allclose(slice_vds, slice_segy, rtol=tolerance)
 
+def compare_crossline_slicing(vds_filename):
+    slices = [slice(20, 21, 2), slice(21, 23, 1), slice(None, 22, None), slice(22, None, None)]
+    with pyvds.open(vds_filename) as vdsfile:
+        for slice_ in slices:
+            slices_slice = np.asarray(vdsfile.xline[slice_])
+            start = slice_.start if slice_.start is not None else 20
+            stop = slice_.stop if slice_.stop is not None else 25
+            step = slice_.step if slice_.step is not None else 1
+            slices_concat = np.asarray([vdsfile.xline[i] for i in range(start, stop, step)])
+            assert np.array_equal(slices_slice, slices_concat)
 
 def test_crossline_accessor():
     compare_crossline_ordinal(VDS_FILE, SGY_FILE, [0, 1, 2, 3, 4], tolerance=1e-5)
     compare_crossline_number(VDS_FILE, SGY_FILE, [20, 21, 22, 23, 24], tolerance=1e-5)
+    compare_crossline_slicing(VDS_FILE)
 
 
 def compare_zslice(vds_filename, tolerance):
