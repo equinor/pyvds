@@ -92,3 +92,8 @@ def test_trace_accessor():
                 vds_trace = vdsfile.trace[trace_number]
                 segy_trace = segyfile.trace[trace_number]
                 assert np.allclose(vds_trace, segy_trace, rtol=1e-5)
+
+def test_read_bin_header():
+    with pyvds.open(VDS_FILE) as vdsfile:
+        with segyio.open(SGY_FILE) as segyfile:
+            assert vdsfile.bin == segyfile.bin

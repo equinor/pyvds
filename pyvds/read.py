@@ -1,5 +1,6 @@
 import numpy as np
 import openvds
+import segyio
 
 class VdsReader:
     def __init__(self, filename):
@@ -207,7 +208,12 @@ class VdsReader:
                                                       max=(self.n_samples, xl+1, il+1))
         return req.data
 
+    def get_file_binary_header(self):
+        layout = openvds.getLayout(self.filehandle)
+        bin = layout.getMetadata("SEGY", "BinaryHeader", openvds.core.MetadataType.BLOB)
+        return segyio.segy.Field(bin, kind='binary')
+
     def get_file_text_header(self):
         layout = openvds.getLayout(self.filehandle)
-        bin = layout.getMetadata("SEGY", "TextHeader", openvds.core.MetadataType.BLOB)
-        return [bytearray(bin.decode("cp037"), encoding="ascii", errors="ignore")]
+        txt = layout.getMetadata("SEGY", "TextHeader", openvds.core.MetadataType.BLOB)
+        return [bytearray(txt.decode("cp037"), encoding="ascii", errors="ignore")]
