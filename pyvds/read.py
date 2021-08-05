@@ -43,39 +43,162 @@ class VdsReader:
 
 
     def read_inline_number(self, il_no):
+        """Reads one inline from VDS file
+
+        Parameters
+        ----------
+        il_no : int
+            The inline number
+
+        Returns
+        -------
+        inline : numpy.ndarray of float32, shape: (n_xlines, n_samples)
+            The specified inline, decompressed
+        """
         return self.read_inline(self.coord_to_index(il_no, self.ilines))
 
     def read_inline(self, il_idx):
+        """Reads one inline from VDS file
+
+        Parameters
+        ----------
+        il_id : int
+            The ordinal number of the inline in the file
+
+        Returns
+        -------
+        inline : numpy.ndarray of float32, shape: (n_xlines, n_samples)
+            The specified inline, decompressed
+        """
         req = self.access_manager.requestVolumeSubset(min=(0, 0, il_idx),
                                                       max=(self.n_samples, self.n_xlines, il_idx+1))
         return req.data.reshape((self.n_xlines, self.n_samples))
 
 
     def read_crossline_number(self, xl_no):
+        """Reads one crossline from VDS file
+
+        Parameters
+        ----------
+        xl_no : int
+            The crossline number
+
+        Returns
+        -------
+        crossline : numpy.ndarray of float32, shape: (n_ilines, n_samples)
+            The specified crossline, decompressed
+        """
         return self.read_crossline(self.coord_to_index(xl_no, self.xlines))
 
     def read_crossline(self, xl_idx):
+        """Reads one crossline from VDS file
+
+        Parameters
+        ----------
+        xl_id : int
+            The ordinal number of the crossline in the file
+
+        Returns
+        -------
+        crossline : numpy.ndarray of float32, shape: (n_ilines, n_samples)
+            The specified crossline, decompressed
+        """
         req = self.access_manager.requestVolumeSubset(min=(0, xl_idx, 0),
                                                       max=(self.n_samples, xl_idx+1, self.n_ilines))
         return req.data.reshape((self.n_ilines, self.n_samples))
 
 
     def read_zslice_coord(self, samp_no):
+        """Reads one zslice from VDS file (time or depth, depending on file contents)
+
+        Parameters
+        ----------
+        zslice_no : int
+            The sample time/depth to return a zslice from
+
+        Returns
+        -------
+        zslice : numpy.ndarray of float32, shape: (n_ilines, n_xlines)
+            The specified zslice (time or depth, depending on file contents), decompressed
+        """
         return self.read_zslice(self.coord_to_index(samp_no, self.samples))
 
     def read_zslice(self, z_idx):
+        """Reads one zslice from VDS file (time or depth, depending on file contents)
+
+        Parameters
+        ----------
+        zslice_id : int
+            The ordinal number of the zslice in the file
+
+        Returns
+        -------
+        zslice : numpy.ndarray of float32, shape: (n_ilines, n_xlines)
+            The specified zslice (time or depth, depending on file contents), decompressed
+        """
         req = self.access_manager.requestVolumeSubset(min=(z_idx, 0, 0),
                                                       max=(z_idx+1, self.n_xlines, self.n_ilines))
         return req.data.reshape((self.n_ilines, self.n_xlines))
 
 
     def read_subvolume(self, min_il, max_il, min_xl, max_xl, min_z, max_z):
+        """Reads a sub-volume from VDS file
+
+        Parameters
+        ----------
+        min_il : int
+            The index of the first inline to get from the cube. Use 0 to for the first inline in the cube
+        max_il : int
+            The index of the last inline to get, non inclusive. To get one inline, use max_il = min_il + 1
+
+        min_xl : int
+            The index of the first crossline to get from the cube. Use 0 for the first crossline in the cube
+        max_xl : int
+            The index of the last crossline to get, non inclusive. To get one crossline, use max_xl = min_xl + 1
+
+        min_z : int
+            The index of the first time sample to get from the cube. Use 0 for the first time sample in the cube
+        max_z : int
+            The index of the last time sample to get, non inclusive. To get one time sample, use max_z = min_z + 1
+
+        access_padding : bool, optional
+            Functions which manage voxels used for padding themselves may relax bounds-checking to padded dimensions
+
+        Returns
+        -------
+        subvolume : numpy.ndarray of float32, shape (max_il - min_il, max_xl - min_xl, max_z - min_z)
+            The specified subvolume, decompressed
+        """
         req = self.access_manager.requestVolumeSubset(min=(min_z, min_xl, min_il),
                                                       max=(max_z, max_xl, max_il))
         return req.data.reshape((max_il-min_il, max_xl-min_xl, max_z-min_z))
 
+    def read_volume(self):
+        """Reads the whole volume from VDS file
+
+        Returns
+        -------
+        volume : numpy.ndarray of float32, shape (n_ilines, n_xline, n_samples)
+            The whole volume, decompressed
+        """
+        return self.read_subvolume(0, self.n_ilines,
+                                   0, self.n_xlines,
+                                   0, self.n_samples)
+
 
     def get_trace(self, index):
+        """Reads one trace from VDS file
+
+        Parameters
+        ----------
+        index : int
+            The ordinal number of the trace in the file
+
+        Returns
+        -------
+        trace : numpy.ndarray of float32, shape (n_samples)
+            A single trace, decompressed
+        """
         if not 0 <= index < self.n_ilines * self.n_xlines:
             raise IndexError("Index {} is out of range, total traces is {}".format(index, self.n_ilines * self.n_xlines))
 

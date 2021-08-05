@@ -120,3 +120,12 @@ def compare_subvolume(vds_filename, tolerance):
 
 def test_read_subvolume():
     compare_subvolume(VDS_FILE, tolerance=1e-5)
+
+
+def compare_volume(vds_filename, tolerance):
+    vol_vds = VdsReader(vds_filename).read_volume()
+    vol_segy = segyio.tools.cube(SGY_FILE)
+    assert np.allclose(vol_vds, vol_segy, rtol=tolerance)
+
+def test_read_volume():
+    compare_volume(VDS_FILE, tolerance=1e-5)
