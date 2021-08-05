@@ -1,0 +1,3 @@
+-r requirements-pypi.txt
+-r requirements-dev.txt
+-r requirements-jfrog.txt

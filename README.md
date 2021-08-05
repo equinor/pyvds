@@ -7,12 +7,9 @@ reading of VDS files with a syntax familiar to users of segyio.
 
 ### Installation
 
-Requires **openvds** package from Bluware, which is not available on PyPI. 
+Requires **openvds** package from Bluware, see requirements-jfrog.txt
 
-Get it like this:
-```pip install openvds -f http://bluware.jfrog.io/artifactory/Releases-OpenVDSPlus/2.1/python/win --trusted-host bluware.jfrog.io```
-
-Then (for now) ```pip install git+ssh://git@github.com/equinor/pyvds.git@master```
+Installation is (for now) ```pip install git+ssh://git@github.com/equinor/pyvds.git@master```
 
 ---
 
