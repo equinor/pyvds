@@ -97,3 +97,30 @@ def test_read_bin_header():
     with pyvds.open(VDS_FILE) as vdsfile:
         with segyio.open(SGY_FILE) as segyfile:
             assert vdsfile.bin == segyfile.bin
+
+
+def test_read_trace_header():
+    with pyvds.open(VDS_FILE) as vdsfile:
+        with segyio.open(SGY_FILE) as sgyfile:
+            for trace_number in range(25):
+                sgz_header = vdsfile.header[trace_number]
+                sgy_header = sgyfile.header[trace_number]
+                assert sgz_header == sgy_header
+
+
+def test_read_trace_header_slicing():
+    slices = [slice(0, 5, None), slice(0, None, 2), slice(5, None, -1), slice(None, None, 10), slice(None, None, None)]
+    with pyvds.open(VDS_FILE) as vdsfile:
+        with segyio.open(SGY_FILE) as sgyfile:
+            for slice_ in slices:
+                sgy_headers = sgyfile.header[slice_]
+                sgz_headers = vdsfile.header[slice_]
+                for sgz_header, sgy_header in zip(sgz_headers, sgy_headers):
+                    assert sgz_header == sgy_header
+
+
+def test_header_is_iterable():
+    with pyvds.open(VDS_FILE) as vdsfile:
+        with segyio.open(SGY_FILE) as sgy_file:
+            for sgz_header, sgy_header in zip(vdsfile.header, sgy_file.header):
+                assert sgz_header == sgy_header

@@ -7,6 +7,7 @@ class VdsReader:
         self.filename = filename
         self.filehandle = openvds.open(self.filename)
         self.access_manager = openvds.getAccessManager(self.filehandle)
+        self.layout = openvds.getLayout(self.filehandle)
         self.n_samples, self.n_xlines, self.n_ilines = self.access_manager.getVolumeDataLayout().numSamples
         self.tracecount = self.n_xlines * self.n_ilines
 
@@ -208,12 +209,35 @@ class VdsReader:
                                                       max=(self.n_samples, xl+1, il+1))
         return req.data
 
+
+    def gen_trace_header(self, index):
+        """Reads one trace header from VDS file
+
+        Parameters
+        ----------
+        index : int
+            The ordinal number of the trace header in the file
+
+        Returns
+        -------
+        header : dict
+            A single header as a dictionary of headerword-value pairs
+        """
+        if not 0 <= index < self.n_ilines * self.n_xlines:
+            raise IndexError(self.range_error.format(index, 0, self.tracecount))
+
+        xl_coord, il_coord = index % self.n_ilines, index // self.n_ilines
+
+        req = self.access_manager.requestVolumeSubset((0,xl_coord,il_coord), (240,xl_coord+1,il_coord+1),
+                                                     channel=self.layout.getChannelIndex('SEGYTraceHeader'),
+                                                     format=openvds.VolumeDataChannelDescriptor.Format.Format_U8)
+
+        return segyio.segy.Field(req.data.tobytes(), kind='trace')
+
     def get_file_binary_header(self):
-        layout = openvds.getLayout(self.filehandle)
-        bin = layout.getMetadata("SEGY", "BinaryHeader", openvds.core.MetadataType.BLOB)
+        bin = self.layout.getMetadata("SEGY", "BinaryHeader", openvds.core.MetadataType.BLOB)
         return segyio.segy.Field(bin, kind='binary')
 
     def get_file_text_header(self):
-        layout = openvds.getLayout(self.filehandle)
-        txt = layout.getMetadata("SEGY", "TextHeader", openvds.core.MetadataType.BLOB)
+        txt = self.layout.getMetadata("SEGY", "TextHeader", openvds.core.MetadataType.BLOB)
         return [bytearray(txt.decode("cp037"), encoding="ascii", errors="ignore")]

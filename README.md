@@ -8,6 +8,7 @@ reading of VDS files with a syntax familiar to users of segyio.
 ### Installation
 
 Requires **openvds** package from Bluware, see requirements-jfrog.txt
+Bluware say they will provide openvds through PyPI soon, but until then need to get dependencies as: ```pip install -r requirements.txt```
 
 Installation is (for now) ```pip install git+ssh://git@github.com/equinor/pyvds.git@master```
 
@@ -23,6 +24,7 @@ with pyvds.open("in.vds")) as vdsfile:
     xl_slice = vdsfile.xline[LINE_NUMBER]
     zslice = vdsfile.depth_slice[SLICE_IDX]
     trace = vdsfile.trace[TRACE_IDX]
+    trace_header = vdsfile.header[TRACE_IDX]
     text_file_header = vdsfile.text[0]
 ```
 
