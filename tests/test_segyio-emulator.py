@@ -124,3 +124,12 @@ def test_header_is_iterable():
         with segyio.open(SGY_FILE) as sgy_file:
             for sgz_header, sgy_header in zip(vdsfile.header, sgy_file.header):
                 assert sgz_header == sgy_header
+
+
+def compare_cube(vds_filename, sgy_filename, tolerance):
+    vol_sgy = segyio.tools.cube(sgy_filename)
+    vol_vds = pyvds.tools.cube(vds_filename)
+    assert np.allclose(vol_vds, vol_sgy, rtol=tolerance)
+
+def test_cube_func():
+    compare_cube(VDS_FILE, SGY_FILE, tolerance=1e-5)
