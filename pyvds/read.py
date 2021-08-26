@@ -1,6 +1,7 @@
 import numpy as np
 import openvds
 import segyio
+from segyio import _segyio
 
 class VdsReader:
     def __init__(self, filename):
