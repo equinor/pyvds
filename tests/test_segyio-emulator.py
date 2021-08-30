@@ -88,7 +88,7 @@ def test_zslice_accessor():
 def test_trace_accessor():
     with pyvds.open(VDS_FILE) as vdsfile:
         with segyio.open(SGY_FILE) as segyfile:
-            for trace_number in range(25):
+            for trace_number in range(-5, 25, 1):
                 vds_trace = vdsfile.trace[trace_number]
                 segy_trace = segyfile.trace[trace_number]
                 assert np.allclose(vds_trace, segy_trace, rtol=1e-5)
@@ -102,10 +102,10 @@ def test_read_bin_header():
 def test_read_trace_header():
     with pyvds.open(VDS_FILE) as vdsfile:
         with segyio.open(SGY_FILE) as sgyfile:
-            for trace_number in range(25):
-                sgz_header = vdsfile.header[trace_number]
+            for trace_number in range(-5, 25, 1):
+                vds_header = vdsfile.header[trace_number]
                 sgy_header = sgyfile.header[trace_number]
-                assert sgz_header == sgy_header
+                assert vds_header == sgy_header
 
 
 def test_read_trace_header_slicing():
@@ -114,16 +114,16 @@ def test_read_trace_header_slicing():
         with segyio.open(SGY_FILE) as sgyfile:
             for slice_ in slices:
                 sgy_headers = sgyfile.header[slice_]
-                sgz_headers = vdsfile.header[slice_]
-                for sgz_header, sgy_header in zip(sgz_headers, sgy_headers):
-                    assert sgz_header == sgy_header
+                vds_headers = vdsfile.header[slice_]
+                for vds_header, sgy_header in zip(vds_headers, sgy_headers):
+                    assert vds_header == sgy_header
 
 
 def test_header_is_iterable():
     with pyvds.open(VDS_FILE) as vdsfile:
         with segyio.open(SGY_FILE) as sgy_file:
-            for sgz_header, sgy_header in zip(vdsfile.header, sgy_file.header):
-                assert sgz_header == sgy_header
+            for vds_header, sgy_header in zip(vdsfile.header, sgy_file.header):
+                assert vds_header == sgy_header
 
 
 def compare_cube(vds_filename, sgy_filename, tolerance):
