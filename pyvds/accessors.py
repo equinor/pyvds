@@ -98,3 +98,4 @@ class SegyioEmulator(VdsReader):
         self.header = HeaderAccessor(self.filename)
         self.text = self.get_file_text_header()
         self.bin = self.get_file_binary_header()
+        self.unstructured = False
