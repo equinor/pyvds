@@ -26,7 +26,7 @@ class Accessor(VdsReader):
         return key in self.keys_object
 
     def __hash__(self):
-        return hash(self.filename)
+        return hash(self._filename)
 
     def keys(self):
         return self.keys_object
@@ -95,11 +95,11 @@ class TraceAccessor(Accessor, Mapping):
 class SegyioEmulator(VdsReader):
     def __init__(self, filename):
         super(SegyioEmulator, self).__init__(filename)
-        self.iline = InlineAccessor(self.filename)
-        self.xline = CrosslineAccessor(self.filename)
-        self.depth_slice = ZsliceAccessor(self.filename)
-        self.trace = TraceAccessor(self.filename)
-        self.header = HeaderAccessor(self.filename)
+        self.iline = InlineAccessor(self._filename)
+        self.xline = CrosslineAccessor(self._filename)
+        self.depth_slice = ZsliceAccessor(self._filename)
+        self.trace = TraceAccessor(self._filename)
+        self.header = HeaderAccessor(self._filename)
         self.text = self.get_file_text_header()
         self.bin = self.get_file_binary_header()
         self.unstructured = False

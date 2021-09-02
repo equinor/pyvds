@@ -5,8 +5,8 @@ from segyio import _segyio
 
 class VdsReader:
     def __init__(self, filename):
-        self.filename = filename
-        self.filehandle = openvds.open(self.filename)
+        self._filename = filename
+        self.filehandle = openvds.open(self._filename)
         self.access_manager = openvds.getAccessManager(self.filehandle)
         self.layout = openvds.getLayout(self.filehandle)
         self.n_samples, self.n_xlines, self.n_ilines = self.access_manager.getVolumeDataLayout().numSamples
