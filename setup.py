@@ -6,8 +6,9 @@ setuptools.setup(name='pyvds',
                  long_description='Convenience wrapper around OpenVDS+ Python bindings which enables reading VDS files with a syntax familiar to users of segyio.',
                  url='https://github.com/equinor/pyvds',
 
-                 version='0.0.0',
+                 use_scm_version=True,
                  install_requires=['openvds'],
-                 setup_requires=['setuptools'],
+                 dependency_links = ['https://bluware.jfrog.io/artifactory/Releases-OpenVDSPlus/2.1/python'],
+                 setup_requires=['setuptools', 'setuptools_scm'],
                  packages=['pyvds']
                  )
