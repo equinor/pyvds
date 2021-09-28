@@ -7,7 +7,7 @@ setuptools.setup(name='pyvds',
                  url='https://github.com/equinor/pyvds',
 
                  use_scm_version=True,
-                 install_requires=['openvds'],
+                 install_requires=['openvds', 'numpy', 'segyio'],
                  dependency_links = ['https://bluware.jfrog.io/artifactory/Releases-OpenVDSPlus/2.1/python'],
                  setup_requires=['setuptools', 'setuptools_scm'],
                  packages=['pyvds']

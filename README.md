@@ -1,5 +1,7 @@
 # pyVDS
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![CircleCI](https://circleci.com/gh/equinor/pyvds/tree/master.svg?style=shield)](https://circleci.com/gh/equinor/pyvds/tree/master)
+[![PyPi Version](https://img.shields.io/pypi/v/pyvds.svg)](https://pypi.org/project/pyvds/)
 
 Convenience wrapper around Bluware's OpenVDS+ Python bindings which enables 
 reading of VDS files with a syntax familiar to users of segyio.
@@ -8,10 +10,12 @@ reading of VDS files with a syntax familiar to users of segyio.
 
 ### Installation
 
-Requires **openvds** package from Bluware, see requirements-jfrog.txt
-Bluware say they will provide openvds through PyPI soon, but until then need to get dependencies as: ```pip install -r requirements.txt```
+Requires **openvds** package from Bluware. **N.B. This is licensed under CC-BY-ND 4.0**
 
-Installation is (for now) ```pip install git+ssh://git@github.com/equinor/pyvds.git@master```
+Bluware say they will provide the openvds package through PyPI soon, but for now setuptools collects this via dependency_links.
+
+- Wheels from [PyPI](https://pypi.org/project/pyvds/): `pip install pyvds`
+- Source from [Github](https://github.com/equinor/pyvds): `git clone https://github.com/equinor/pyvds.git`
 
 ---
 
