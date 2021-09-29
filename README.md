@@ -10,7 +10,7 @@ reading of VDS files with a syntax familiar to users of segyio.
 
 ### Installation
 
-Requires **openvds** package from Bluware.
+Requires [**openvds** package from Bluware](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/open-vds).
 
 **N.B. This is licensed under CC-BY-ND 4.0**
 
