@@ -10,9 +10,9 @@ reading of VDS files with a syntax familiar to users of segyio.
 
 ### Installation
 
-Requires **openvds** package from Bluware. **N.B. This is licensed under CC-BY-ND 4.0**
+Requires **openvds** package from Bluware.
 
-Bluware say they will provide the openvds package through PyPI soon, but for now setuptools collects this via dependency_links.
+**N.B. This is licensed under CC-BY-ND 4.0**
 
 - Wheels from [PyPI](https://pypi.org/project/pyvds/): `pip install pyvds`
 - Source from [Github](https://github.com/equinor/pyvds): `git clone https://github.com/equinor/pyvds.git`

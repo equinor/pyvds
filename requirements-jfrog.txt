@@ -1,3 +1,0 @@
---find-links https://bluware.jfrog.io/artifactory/Releases-OpenVDSPlus/2.1/python/win
---trusted-host bluware.jfrog.io
-openvds

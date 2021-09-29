@@ -20,5 +20,8 @@ jobs:
           command: |
             pip install -r requirements.txt
       - run:
+          command: |
+            pip install -r requirements-dev.txt
+      - run:
           name: Run tests
           command: python -m pytest
