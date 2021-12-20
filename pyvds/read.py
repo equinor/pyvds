@@ -15,17 +15,17 @@ class VdsReader:
         il_desc = self.access_manager.getVolumeDataLayout().getAxisDescriptor(2)
         self.ilines = np.arange(int(il_desc.getCoordinateMin()),
                                 int(il_desc.getCoordinateMax())+int(il_desc.getCoordinateStep()),
-                                int(il_desc.getCoordinateStep()))
+                                int(il_desc.getCoordinateStep())).astype('intc')
 
         xl_desc = self.access_manager.getVolumeDataLayout().getAxisDescriptor(1)
         self.xlines = np.arange(int(xl_desc.getCoordinateMin()),
                                 int(xl_desc.getCoordinateMax())+int(xl_desc.getCoordinateStep()),
-                                int(xl_desc.getCoordinateStep()))
+                                int(xl_desc.getCoordinateStep())).astype('intc')
 
         samp_dec = self.access_manager.getVolumeDataLayout().getAxisDescriptor(0)
         self.samples = np.arange(samp_dec.getCoordinateMin(),
                                  samp_dec.getCoordinateMax()+samp_dec.getCoordinateStep(),
-                                 samp_dec.getCoordinateStep())
+                                 samp_dec.getCoordinateStep()).astype('float')
 
 
     def __enter__(self):
