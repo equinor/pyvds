@@ -131,5 +131,13 @@ def compare_cube(vds_filename, sgy_filename, tolerance):
     vol_vds = pyvds.tools.cube(vds_filename)
     assert np.allclose(vol_vds, vol_sgy, rtol=tolerance)
 
-def test_cube_func():
+def compare_dt(vds_filename, sgy_filename):
+    with segyio.open(sgy_filename) as sgy_file:
+        dt_sgy = segyio.tools.dt(sgy_file)
+    with pyvds.open(vds_filename) as vds_file:
+        dt_vds = pyvds.tools.dt(vds_file)
+    assert dt_sgy == dt_vds
+
+def test_tools_functions():
     compare_cube(VDS_FILE, SGY_FILE, tolerance=1e-5)
+    compare_dt(VDS_FILE, SGY_FILE)

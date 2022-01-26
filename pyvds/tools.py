@@ -4,6 +4,9 @@ def cube(filename):
     with VdsReader(filename) as reader:
         return reader.read_volume()
 
+def dt(reader):
+    return 1000 * (reader.samples[1] - reader.samples[0])
+
 #   Copyright 2021 Equinor
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
